@@ -1,0 +1,53 @@
+<link href="main.css" rel="stylesheet" type="text/css">
+
+<div id="contest-detail-content">
+
+</div>
+
+
+<script id="tmpl-contest_detail_main" type="text/x-handlebars-template">
+    <div class="header-region">
+    </div>
+    <div class="tabs-region">
+    </div>
+    </div>
+    <!--<div class="profile_body">-->
+    <!--</div>-->
+
+</script>
+<script id="tmpl-contest_detail_header" type="text/x-handlebars-template">
+    <!--background-image:url({{webUrl.p4}})-->
+    <div class="cover_photo" style="">
+        <div class="contest-mask-container clearfix">
+            <div class="contest-mask-info float-left">
+                <span class="contest-title">{{{title}}}</span>
+                <div class="item-prize icons">{{top_left_mask this}}</div>
+                <div class="item-bottom clearfix">
+                    {{{time_handle this}}}
+                </div>
+            </div>
+            {{#upload_handle this}}
+            <div class="upload-button upload-action float-left">
+                上传作品
+            </div>
+            {{/upload_handle}}
+        </div>
+
+    </div>
+
+</script>
+<script id="tmpl-contest_detail_tabs" type="text/x-handlebars-template">
+    <ul class="profile_nav px_tabs">
+        <li class=""><a data-active="index.html" id="contest_tab_about" href="javascript:void(0)">大赛简介</a></li>
+        <li class="" style="display:none;"><a data-active="prize.html" id="contest_tab_prize" href="javascript:void(0)">获奖作品</a></li>
+        <li class="active"><a data-active="rating.html" id="contest_tab_rating" href="javascript:void(0)">人气排名</a></li>
+        <li class=""><a data-active="list.html" id="contest_tab_total_works" href="javascript:void(0)">全部作品</a></li>
+        <li class=""><a data-active="mine.html" id="contest_tab_my_work" href="javascript:void(0)" style="display:none;">我的作品</a></li>
+    </ul>
+</script>
+
+<script type="text/javascript" src="/js/handlebars-v3.0.3.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript" src="/contest_public/js/util.js"></script>
+<script type="text/javascript" src="/contest_public/js/contest_detail2.js"></script>
+<script type="text/javascript" src="main.js"></script>
