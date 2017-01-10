@@ -12,14 +12,20 @@ var remotePath = "/resource/fd/promote/201507/qixi/";
 
 //获取当前目录绝对路径，这里resolve()不传入参数
 //var filePath = path.resolve();
-var filePath = __dirname;
-filePath = path.join(filePath, 'adobe');
+var workPath = __dirname;
+var filePath = path.join(workPath, 'adobe');
 console.log('5555');
 console.log(filePath);
 
 
 //读取文件存储数组
 var fileArr = [];
+var fileObj = {
+    'directory':[],
+    'file':[]
+}
+
+
 
 //读取文件目录
 fs.readdir(filePath, function (err, files) {
@@ -28,7 +34,6 @@ fs.readdir(filePath, function (err, files) {
         return;
     }
     var count = files.length;
-    //console.log(files);
     var results = {};
     files.forEach(function (filename) {
 
@@ -36,10 +41,10 @@ fs.readdir(filePath, function (err, files) {
         fs.stat(path.join(filePath, filename), function (err, stats) {
             if (err) throw err;
 
-            //console.log(path.join(filePath, filename));
+            console.log(path.join(filePath, filename));
             //
-            //console.log('----');
-            //console.log(stats);
+            console.log('----');
+            console.log(stats);
 
 
             //文件
@@ -50,32 +55,39 @@ fs.readdir(filePath, function (err, files) {
                 //    console.log(fileData.toString());
                 //});
 
-                if (getdir(filename) == 'html') {
-                    var newUrl = remotePath + filename;
-                    fileArr.push(newUrl);
-                    writeFile(fileArr);
+                //这里暂且只处理大赛直接目录下的文件, 文件夹暂且不处理
+                var extNameArr = ['.html', '.css', '.js']
+
+                if (~extNameArr.indexOf(path.extname(filename))) { //作用等同于getdir
+                    var newUrl = filename;
+                    fileObj.file.push(newUrl);
+                    console.log(fileObj.file);
+                    console.log(fileObj.directory);
+                    writeFile(fileObj.file);
                 }
                 // (getdir(filename) == 'html')&&(fileArr.push(filename);writeFile(newUrl));
                 //    console.log("%s is file", filename);
             } else if (stats.isDirectory()) {
                 // console.log("%s is a directory文件目录", filename);
-                //返回指定文件名的扩展名称
-                //console.log(path.extname("pp/index.html"));
 
+                //读取目录下的文件
+                //if (filename == 'css' || filename == 'imgs') {
+                //    //var readurl = filePath+'/'+filename;
+                //    //filePath+"/"+filename不能用/直接连接，Unix系统是”/“，Windows系统是”\“
+                //    //    console.log(path.join(filePath,filename));
+                //    var name = filename;
+                //    readFile(path.join(filePath, filename), name);
+                //}
 
-                if (filename == 'css' || filename == 'images') {
-                    //var readurl = filePath+'/'+filename;
-                    //filePath+"/"+filename不能用/直接连接，Unix系统是”/“，Windows系统是”\“
-                    //    console.log(path.join(filePath,filename));
-                    var name = filename;
-                    readFile(path.join(filePath, filename), name);
-                }
+                //对于目录只返回目录的名称
+                fileObj.directory.push(filename);
+
             }
         });
     });
 });
-
-console.log(fileArr);
+console.log(fileObj.file);
+console.log(fileObj.directory);
 
 return false;
 
@@ -104,11 +116,19 @@ function readFile(readurl, name) {
                 if (err) throw err;
                 //是文件
                 if (stats.isFile()) {
-                    var newUrl = remotePath + name + '/' + filename;
-                    fileArr.push(newUrl);
-                    writeFile(fileArr)
-                    console.log();
-                    //是子目录
+                    //读取文件详细内容
+                    //fs.readFile(path.join(filePath, filename), function(err, fileData) {
+                    //    console.log(fileData.toString());
+                    //});
+
+                    //这里暂且只处理大赛直接目录下的文件, 文件夹暂且不处理
+                    var extNameArr = ['.html', '.css', '.js', '.png'];
+
+                    if (~extNameArr.indexOf(path.extname(filename))) { //作用等同于getdir
+                        var newUrl = filename;
+                        fileObj.file.push(newUrl);
+                        writeFile(fileObj.file);
+                    }
                 } else if (stats.isDirectory()) {
                     var dirName = filename;
                     readFile(path.join(readurl, filename), name + '/' + dirName);
@@ -124,7 +144,7 @@ function readFile(readurl, name) {
 // 写入到filelisttxt文件
 function writeFile(data) {
     var data = data.join("\n");
-    fs.writeFile(filePath + "/" + "filelist.txt", data + '\n', function (err) {
+    fs.writeFile(workPath + "/" + "filelist.txt", data + '\n', function (err) {
         if (err) throw err;
         console.log("写入成功");
     });
